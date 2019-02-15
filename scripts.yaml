@@ -1,0 +1,40 @@
+lock:
+  alias: LOCK
+  sequence:
+  - data:
+      entity_id: switch.lock
+    service: switch.turn_off
+  - data:
+      entity_id: switch.lock
+    service: switch.turn_on
+  - data:
+      payload: LOCK
+      topic: home/door/status
+    service: mqtt.publish
+  - data:
+      payload: CERRADA
+      topic: home/door/stado
+    service: mqtt.publish
+unlock:
+  alias: UNLOCK
+  sequence:
+  - data:
+      entity_id: switch.lock
+    service: switch.turn_off
+  - data:
+      entity_id: switch.lock
+    service: switch.turn_on
+  - data:
+      entity_id: switch.lock
+    service: switch.turn_off
+  - data:
+      entity_id: switch.lock
+    service: switch.turn_on
+  - data:
+      payload: UNLOCK
+      topic: home/door/status
+    service: mqtt.publish
+  - data:
+      payload: ABIERTA
+      topic: home/door/stado
+    service: mqtt.publish
