@@ -1,0 +1,433 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 42.2167
+  longitude: -8.2667
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Madrid
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+panel_custom:
+  - name: floorplan
+    sidebar_title: Plano de la Casa
+    sidebar_icon: mdi:home
+    url_path: floorplan
+    config: !include floorplan.yaml
+
+#ffmpeg:
+
+camera:
+   - platform: mjpeg
+     mjpeg_url: http://192.168.31.193:8081
+     name: camera1
+#  - platform: onvif
+#    host: 192.168.31.93
+#    name: camara
+#    username: 'admin'
+#    password: '1234'
+#    port: 80
+# Enables the frontend
+frontend:
+  extra_html_url:
+    - /local/custom_ui/state-card-floorplan.html
+
+  themes: !include themes.yaml
+
+# Enables configuration UI
+config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+device_tracker:
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+notify:
+  - name: android
+    platform: fcm-android
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+weather:
+  - platform: darksky
+    api_key: d08c3b10c05aaa24c33d220049d9540f
+    mode: daily
+
+lovelace:
+  mode: yaml
+
+climate:
+  - platform: broadlinkHysen
+    name: termocasa
+    host: 192.168.31.112
+    mac: 78:0f:77:d4:44:99
+    target_temp_default: 20
+    target_temp_step: 0.5
+    scan_interval: 15
+
+mqtt:
+  broker: 192.168.31.193
+  port: 1883
+  username: insega
+  password: insega
+
+binary_sensor:
+  - platform: mqtt
+    state_topic: dummy/floorplan/sensor
+    name: floorplan
+
+switch:
+  - platform: rpi_gpio
+    ports:
+      4: lock
+
+  - platform: mqtt
+    name: "shelly1"
+    state_topic: "shellies/shelly1-227375/relay/0"
+    command_topic: "shellies/shelly1-227375/relay/0/command"
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "shelly2"
+    state_topic: "shellies/shellyswitch-134A67/relay/0"
+    command_topic: "shellies/shellyswitch-134A67/relay/0/command"
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "shelly21"
+    state_topic: "shellies/shellyswitch-134A67/relay/1"
+    command_topic: "shellies/shellyswitch-134A67/relay/1/command"
+    payload_on: "on"
+    payload_off: "off"
+    retain: false
+
+  - platform: mqtt
+    name: "luz_ofi"
+    state_topic: "zigbee2mqtt/pared"
+    command_topic: "zigbee2mqtt/pared/set"
+    value_template: "{{ value_json.state }}"
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: false
+
+  - platform: mqtt
+    name: door_lock
+    command_topic: "home/door/command"
+    state_topic: "home/door/status"
+    payload_on: "LOCK"
+    payload_off: "UNLOCK"
+
+input_boolean:
+  incognito:
+    initial: off
+
+lock:
+  - platform: mqtt
+    name: doorlock
+    command_topic: "home/door/command"
+    state_topic: "home/door/status"
+
+xiaomi_aqara:
+  discovery_retry: 15
+  gateways:
+    - key: zhxuc28f0z2ppaqu 
+
+# Sensors
+sensor:
+  - platform: yr
+
+  - platform: mqtt
+    name: doorlock
+    state_topic: "home/door/stado"
+
+  - platform: mqtt
+    name: power
+    state_topic: "shellies/shellyswitch-134A67/relay/power"
+    unit_of_measurement: 'kWh'
+    force_update: true
+
+  - platform: mqtt
+    name: cameramotion
+    state_topic: "cameras/time"
+  
+  - platform: mqtt
+    name: "pres"
+    state_topic: "sensor/presence"
+    
+  - platform: mqtt
+    name: "cube"
+    state_topic: "zigbee2mqtt/cubo"
+    value_template: "{{ value_json.action }}"
+  
+  - platform: mqtt
+    name: "presence"
+    state_topic: "zigbee2mqtt/presencia"
+    value_template: "{{ value_json.occupancy }}"
+
+  - platform: mqtt
+    name: "water"
+    state_topic: "zigbee2mqtt/agua"
+    value_template: "{{ value_json.water_leak }}"
+
+  - platform: mqtt
+    name: "temperatura"
+    state_topic: "zigbee2mqtt/termo"
+    value_template: "{{ value_json.temperature }}"
+    unit_of_measurement: 'ºC'
+    force_update: true
+
+  - platform: mqtt
+    name: "humedad"
+    state_topic: "zigbee2mqtt/termo"
+    value_template: "{{ value_json.humidity }}"
+    unit_of_measurement: '%'
+    force_update: true
+ 
+  - platform: mqtt
+    name: "presion"
+    state_topic: "zigbee2mqtt/termo"
+    value_template: "{{ value_json.pressure }}"
+    unit_of_measurement: 'kPa'
+    force_update: true
+
+  - platform: mqtt
+    name: "bateria_termo"
+    state_topic: "zigbee2mqtt/termo"
+    value_template: "{{ value_json.battery }}"
+  
+  - platform: mqtt
+    name: "pastilla"
+    state_topic: "zigbee2mqtt/pastilla"
+    value_template: "{{ value_json.click }}"
+  
+  - platform: mqtt
+    name: "puerta_princ"
+    state_topic: "zigbee2mqtt/apertura"
+    value_template: "{{ value_json.contact }}"
+  
+  - platform: mqtt
+    name: "bateria_puerta_princ"
+    state_topic: "zigbee2mqtt/apertura"
+    value_template: "{{ value_json.battery }}"
+
+  - platform: time_date
+    display_options:
+      - 'time'
+
+  - platform: template
+    sensors:
+      termo_batery:
+        value_template: "{{ states('sensor.bateria_termo')|float < 15 }}"
+      puerta_princ_batery:
+        value_template: "{{ states('sensor.bateria_puerta_princ')|float < 95 }}"
+      calefaccion_modo:
+        friendly_name: calefaccion_modo
+        value_template: "{{ states.climate.termocasa.attributes.operation_mode }}"
+      calefaccion_activa:
+        friendly_name: calefaccion_activa
+        value_template: "{{ states.climate.termocasa.attributes.heating_active }}"
+      calefaccion_temperatura:
+        friendly_name: calefaccion_temperatura
+        value_template: "{{states.climate.termocasa.attributes.current_temperature | float }}"
+      calefaccion_setpoint:
+        friendly_name: calefaccion_setpoint
+        value_template: "{{ states.climate.termocasa.attributes.temperature | float }}"
+
+  - platform: history_stats
+    name: calefaccion_activa_hoy
+    entity_id: sensor.calefaccion_activa
+    state: 1
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
+
+  - platform: history_stats
+    name: calefaccion_activa_ayer
+    entity_id: sensor.calefaccion_activa
+    state: 1
+    type: time
+    end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    duration:
+        hours: 24
+
+  - platform: history_stats
+    name: calefaccion_activa_semana
+    entity_id: sensor.calefaccion_activa
+    state: 1
+    type: time
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+
+
+input_datetime:
+  luces_encendido:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  luces_apagado:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  lunes_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  lunes_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  martes_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  martes_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  miercoles_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  miercoles_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  jueves_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  jueves_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  viernes_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  viernes_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  sabado_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  sabado_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+  domingo_inicio:
+    name: hora de encendido
+    has_date: false
+    has_time: true
+  domingo_final:
+    name: hora de apagado
+    has_date: false
+    has_time: true
+
+input_number:
+  temperatura1:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+  temperatura2:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+  temperatura3:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+  temperatura4:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+  temperatura5:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+  temperatura6:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+  temperatura7:
+    name: temperatura
+    icon: mdi:thermometer-lines
+    initial: 22
+    min: 15
+    max: 30
+    step: 0.5
+
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml

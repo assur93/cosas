@@ -1,0 +1,336 @@
+views:
+  - cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: sensor
+                entity: sensor.time
+              - type: entity-filter
+                entities:
+                  - device_tracker.asus_z00ad
+                state_filter:
+                  - home
+                card:
+                  type: glance
+                  title: En Casa
+                  show_state: false
+          - type: entities
+            title: Aceso a Casa
+            show_header_toggle: false
+            entities:
+              - entity: lock.doorlock
+                icon: 'mdi:door'
+                name: Puerta de Entrada
+          - type: entity-filter
+            entities:
+              - entity: switch.luz_ofi
+                name: Luz oficina
+                icon: 'mdi:lightbulb-on-outline'
+            state_filter:
+              - "on"
+            card:
+              type: glance
+              title: Luces y Dispositivos Encendidos
+              show_state: false
+          - type: entity-filter
+            entities:
+              - entity: sensor.termo_batery
+                name: Sensor de Temperatura
+                icon: 'mdi:battery-alert'
+              - entity: sensor.puerta_princ_batery
+                name: Sensor Puerta Principal
+                icon: 'mdi:battery-alert'
+            state_filter:
+              - "True"
+            card:
+              type: glance
+              title: Notificaciones
+              show_state: false
+          - type: sensor
+            entity: sensor.temperatura
+            name: Temperatura
+            icon: 'mdi:thermometer'
+            graph: line
+            detail: 1
+          - type: custom:weather-card
+            entity: weather.dark_sky
+            icon: "/local/custom-ui/weather-card/icons/"
+            name: Vigo
+      
+    badges: []
+    path: default_view
+    title: Info
+    icon: 'mdi:information-outline'
+  - cards:
+      - type: vertical-stack
+        cards:
+          - entity: climate.termocasa
+            name: Termostato
+            type: thermostat
+          - type: horizontal-stack
+            cards:
+              - type: sensor
+                entity: sensor.calefaccion_activa_hoy
+                name: Calefaccion hoy
+                icon: 'mdi:radiator'
+              - type: sensor
+                entity: sensor.calefaccion_activa_ayer
+                name: Calefaccion ayer
+                icon: 'mdi:radiator'
+          - type: entities
+            entities:
+              - entity: input_datetime.lunes_inicio
+              - entity: input_datetime.lunes_final
+              - entity: input_number.temperatura1
+              - entity: group.lunes
+            show_header_toggle: false
+            title: Lunes
+          - type: entities
+            entities:
+              - entity: input_datetime.martes_inicio
+              - entity: input_datetime.martes_final
+              - entity: input_number.temperatura2
+              - entity: group.lunes
+            show_header_toggle: false
+            title: Martes
+          - type: entities
+            entities:
+              - entity: input_datetime.miercoles_inicio
+              - entity: input_datetime.miercoles_final
+              - entity: input_number.temperatura3
+              - entity: group.lunes
+            show_header_toggle: false
+            title: Miercoles
+          - type: entities
+            entities:
+              - entity: input_datetime.jueves_inicio
+              - entity: input_datetime.jueves_final
+              - entity: input_number.temperatura4
+              - entity: group.jueves
+            show_header_toggle: false
+            title: Jueves
+          - type: entities
+            entities:
+              - entity: input_datetime.viernes_inicio
+              - entity: input_datetime.viernes_final
+              - entity: input_number.temperatura5
+              - entity: group.lunes
+            show_header_toggle: false
+            title: Viernes
+          - type: entities
+            entities:
+              - entity: input_datetime.sabado_inicio
+              - entity: input_datetime.sabado_final
+              - entity: input_number.temperatura6
+              - entity: group.lunes
+            show_header_toggle: false
+            title: Sabado
+          - type: entities
+            entities:
+              - entity: input_datetime.domingo_inicio
+              - entity: input_datetime.domingo_final
+              - entity: input_number.temperatura7
+              - entity: group.lunes
+            show_header_toggle: false
+            title: Domingo
+
+    badges: []
+    title: Climatizacion
+    icon: 'mdi:radiator'
+  - cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # Habitacion
+
+#          - type: markdown
+#            content: >
+#              ## Luz
+          - type: horizontal-stack
+            cards:
+              - type: "custom:button-card"
+#                name: Luz Habitacion
+                show_state: true
+                entity: switch.luz_ofi
+                icon: 'mdi:lightbulb-on-outline'
+                action: toggle
+                color: rgb(250,193,0)
+                color_off: #3A3B3C
+
+              - type: "custom:button-card"
+#                name: Luz Habitacion
+                show_state: true
+                entity: switch.shelly2
+                icon: 'mdi:fan'
+                action: toggle
+                color: rgb(255,193,0)
+                color_off: #3A3B3C
+
+          - type: entity-button
+            name: Luz Xiaomi
+            icon: 'mdi:blur-radial'
+            tap_action: 
+              action: toggle
+            hold_action:
+              action: more-info
+            entity: light.gateway_light_7811dce1fa8e
+          - type: markdown
+            content: >
+              ## Persiana
+          - type: horizontal-stack
+            cards:
+              - type: "custom:button-card"
+                entity: switch.shelly1
+                icon: 'mdi:chevron-up-box'
+                action: toggle
+                color: rgb(22,143,82)
+                color_off: #3A3B3C
+
+              - type: "custom:button-card"
+                entity: switch.shelly21
+                icon: 'mdi:chevron-down-box'
+                action: toggle
+                color: rgb(22,143,82)
+                color_off: #3A3B3C
+          - type: entities
+            title: Condiciones ambientales
+            show_header_toggle: false
+            entities:
+              - entity: sensor.temperatura
+                name: Temperatura
+                icon: 'mdi:thermometer' 
+              - entity: sensor.humedad
+                name: Humedad
+                icon: 'mdi:water-percent'
+              - entity: sensor.presion
+                name: Presion
+                icon: 'mdi:weather-windy'
+          - type: sensor
+            entity: sensor.power
+            name: Consumo energetico
+            icon: 'mdi:chart-bar'
+            graph: line
+            detail: 1         
+
+    badges: []
+    title: Casa
+    icon: 'mdi:home-outline'
+  - cards:
+      - type: vertical-stack
+        cards:
+          - type: entity-filter
+            entities:
+              - entity: sensor.puerta_princ
+                name: Puerta pricipal abierta
+                icon: 'mdi:door-open'
+            state_filter:
+              - "False"
+            card:
+              type: glance
+              title: Puertas o Ventanas Abiertas
+              show_state: false
+          - type: entities
+            title: Sensores de presencia
+            show_header_toggle: false
+            entities:
+              - entity: sensor.pres
+                name: Sensor de presencia
+                icon: 'mdi:exit-run'
+              - entity: sensor.cameramotion
+                name: Camara Oficina
+                icon: 'mdi:video-outline'
+          - type: entities
+            title: Otras alertas
+            show_header_toggle: false
+            entities: 
+              - entity: sensor.doorlock
+                icon: 'mdi:door'
+                name: Puerta de Entrada
+              - entity: automation.alarma
+                name: Alarma
+                icon: 'mdi:shield'
+          - type: entities
+            title: Modo Ausencia
+            show_header_toggle: false
+            entities:
+              - entity: input_boolean.incognito
+                name: Estado
+                icon: 'mdi:incognito'
+              - entity: input_datetime.luces_encendido
+                name: Hora de encendido
+                icon: 'mdi:lightbulb-on-outline'
+              - entity: input_datetime.luces_apagado
+                name: Hora de apagado
+                icon: 'mdi:lightbulb-outline'
+          - type: iframe
+            title: Camara Oficina
+            url: http://192.168.31.193:8081
+            aspect_ratio: 50%
+#        camera_image: camera.camara
+
+    badges: []
+    title: Seguridad
+    icon: 'mdi:lock-reset'
+  - cards:
+      - type: picture-elements
+       # aspect_ratio: 100%
+        image: /local/floorplan/oficina2.png
+        elements:
+          - type: image
+            entity: switch.luz_ofi
+            tap_action: none
+            image: /local/floorplan/oficina2.png
+            state_filter:
+              "on": brightness(100%)
+              "off": brightness(50%)
+            style:
+              top: 50%
+              left: 50%
+             # height: 100%
+              width: 100%         
+
+          - type: state-icon
+            title: Ventilador
+            tap_action: 
+              action: toggle
+            entity: switch.shelly2
+            style:
+              top: 18%
+              left: 25%
+#              --iron-icon-fill-color: "#6E6F75"
+              --iron-icon-height: 42px
+              --iron-icon-width: 42px
+          - type: state-icon
+            title: Luz2
+            tap_action: 
+              action: toggle
+            entity: switch.luz_ofi
+            style:
+              top: 55%
+              left: 50%
+#              --iron-icon-fill-color: "#6E6F75"
+              --iron-icon-height: 42px
+              --iron-icon-width: 42px
+          - type: state-icon
+            title: Puerta
+            tap_action: 
+              action: toggle
+            entity: switch.door_lock
+            style:
+              top: 88%
+              left: 32%
+              --iron-icon-height: 42px
+              --iron-icon-width: 42px
+
+    badges: []
+    title: Plano
+    icon: 'mdi:floor-plan'
+title: Home
+#background: center / cover no-repeat url("/local/wallpapers/background4.jpg") fixed
+resources:
+  - url: /local/button-card.js
+    type: module
+  - url: /local/custom-ui/weather-card/weather-card.js
+    type: module
