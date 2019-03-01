@@ -1,5 +1,5 @@
 homeassistant:
-  # Name of the location where Home Assistant is running
+ # Name of the location where Home Assistant is running
   name: Home
   # Location required to calculate the time the sun rises and sets
   latitude: 42.2167
@@ -13,7 +13,19 @@ homeassistant:
   # Customization file
   customize: !include customize.yaml
 
-# Show links to resources in log and frontend
+http:
+  api_password: insega1993
+
+influxdb:
+  host: 192.168.31.193
+  port: 8086 
+  database: HA2
+  max_retries: 3
+  default_measurement: state
+  include:
+    entities:
+      - sensor.precio_mqtt
+
 introduction:
 
 panel_custom:
@@ -25,10 +37,12 @@ panel_custom:
 
 #ffmpeg:
 
-camera:
-   - platform: mjpeg
-     mjpeg_url: http://192.168.31.193:8081
-     name: camera1
+#camera:
+#   - platform: generic
+#     still_image_url: http://192.168.31.193:3000/render/d-solo/oxvPjQgRk/precio?orgId=1&panelId=2&from=1551182663436&to=1551269063436&width=1000&height=500&tz=UTC%2B01%3A00
+#     name: grafana
+#     username: admin
+#     password: insega
 #  - platform: onvif
 #    host: 192.168.31.93
 #    name: camara
@@ -50,6 +64,7 @@ config:
 #   base_url: example.duckdns.org:8123
 
 device_tracker:
+  - platform: bluetooth_le_tracker
 # Checks for available updates
 # Note: This component will send some information about your system to
 # the developers to assist with development of Home Assistant.
@@ -115,6 +130,15 @@ switch:
       4: lock
 
   - platform: mqtt
+    name: "sonof"
+    state_topic: "stat/sonoff/POWER"
+    command_topic: "cmnd/sonoff/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+  - platform: mqtt
     name: "shelly1"
     state_topic: "shellies/shelly1-227375/relay/0"
     command_topic: "shellies/shelly1-227375/relay/0/command"
@@ -157,6 +181,8 @@ switch:
 input_boolean:
   incognito:
     initial: off
+  bucle:
+    initial: off
 
 lock:
   - platform: mqtt
@@ -173,14 +199,68 @@ xiaomi_aqara:
 sensor:
   - platform: yr
 
+  - platform: scrape
+    resource: http://www.tarifadeluz.com/
+    name: precio_actual
+    select: 'font[color^="white"] > b'
+    value_template: '{{ value.split(" ")[0] }}'
+    unit_of_measurement: '€/kWh'
+
+  - platform: scrape
+    resource: http://www.tarifadeluz.com/
+    name: hora_precio_minimo
+    select: 'div:nth-of-type(10)'
+    value_template: '{{ value.split()[4] }}'
+
+  - platform: scrape
+    resource: http://www.tarifadeluz.com/
+    name: precio_minimo
+    select: 'div:nth-of-type(10)'
+    value_template: '{{ value.split()[0] }}'
+    unit_of_measurement: '€/kWh'
+  
+  - platform: scrape
+    resource: http://www.tarifadeluz.com/
+    name: hora_precio_maximo
+    select: 'div:nth-of-type(13)'
+    value_template: '{{ value.split()[4] }}'
+
+  - platform: scrape
+    resource: http://www.tarifadeluz.com/
+    name: precio_maximo
+    select: 'div:nth-of-type(13)'
+    value_template: '{{ value.split()[0] }}'
+    unit_of_measurement: '€/kWh'
+
+  - platform: scrape
+    resource: https://tarifaluzhora.es
+    name: precio_medio
+    select: ".gauge_day .main_text"
+    value_template: '{{ value.split()[0] }}'
+    unit_of_measurement: '€'
+
+  - platform: mitemp_bt
+    mac: '4C:65:A8:D4:BC:D0'
+    name: temper
+    force_update: true
+    monitored_conditions:
+      - temperature
+      - battery
+
   - platform: mqtt
     name: doorlock
     state_topic: "home/door/stado"
 
   - platform: mqtt
+    name: precio_mqtt
+    state_topic: "precio"
+    unit_of_measurement: '€'
+    force_update: true
+
+  - platform: mqtt
     name: power
     state_topic: "shellies/shellyswitch-134A67/relay/power"
-    unit_of_measurement: 'kWh'
+    unit_of_measurement: 'W'
     force_update: true
 
   - platform: mqtt
@@ -253,6 +333,13 @@ sensor:
 
   - platform: template
     sensors:
+      precio_act: 
+        value_template: "{{ ((states.sensor.power.state | float * 10)) | round(4) }}"
+        unit_of_measurement: '€/h'
+      precio_sum: 
+        value_template: "{{ ((states.sensor.power.state | float * 1/30000) * (states.sensor.precio_actual.state | float)) | round(10) }}"
+        unit_of_measurement: '€'
+#        scan_interval: 10
       termo_batery:
         value_template: "{{ states('sensor.bateria_termo')|float < 15 }}"
       puerta_princ_batery:

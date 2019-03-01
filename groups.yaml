@@ -17,16 +17,3 @@ jueves:
   entities:
    - automation.jueves_apagado
    - automation.jueves_encendido
-precioluz:
-  name: Precio Luz
-  control: hidden
-  entities:
-  - sensor.fecha
-  - sensor.hora_recogida_de_datos
-  - sensor.actual_eur_kwh
-  - sensor.minimo_diario_hora
-  - sensor.minimo_diario_eur_kwh
-  - sensor.maximo_diario_hora
-  - sensor.maximo_diario_eur_kwh
-  - sensor.precio_medio_eur_kwh
-

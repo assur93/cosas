@@ -1,5 +1,10 @@
 views:
   - cards:
+      - type: custom:compact-custom-header
+        notifications: "hide"
+        voice: "hide"
+        menu: "hide"
+
       - type: vertical-stack
         cards:
           - type: horizontal-stack
@@ -48,11 +53,11 @@ views:
               title: Notificaciones
               show_state: false
           - type: sensor
-            entity: sensor.temperatura
+            entity: sensor.temper_temperature
             name: Temperatura
             icon: 'mdi:thermometer'
             graph: line
-            detail: 1
+            detail: 2
           - type: custom:weather-card
             entity: weather.dark_sky
             icon: "/local/custom-ui/weather-card/icons/"
@@ -63,6 +68,11 @@ views:
     title: Info
     icon: 'mdi:information-outline'
   - cards:
+      - type: custom:compact-custom-header
+        notifications: "hide"
+        voice: "hide"
+        menu: "hide"
+
       - type: vertical-stack
         cards:
           - entity: climate.termocasa
@@ -139,6 +149,11 @@ views:
     title: Climatizacion
     icon: 'mdi:radiator'
   - cards:
+      - type: custom:compact-custom-header
+        notifications: "hide"
+        voice: "hide"
+        menu: "hide"
+ 
       - type: vertical-stack
         cards:
           - type: markdown
@@ -182,7 +197,7 @@ views:
           - type: horizontal-stack
             cards:
               - type: "custom:button-card"
-                entity: switch.shelly1
+                entity: switch.shelly2
                 icon: 'mdi:chevron-up-box'
                 action: toggle
                 color: rgb(22,143,82)
@@ -198,6 +213,8 @@ views:
             title: Condiciones ambientales
             show_header_toggle: false
             entities:
+              - entity: sensor.temper_temperature
+                name: Temp BLE
               - entity: sensor.temperatura
                 name: Temperatura
                 icon: 'mdi:thermometer' 
@@ -218,6 +235,11 @@ views:
     title: Casa
     icon: 'mdi:home-outline'
   - cards:
+      - type: custom:compact-custom-header
+        notifications: "hide"
+        voice: "hide"
+        menu: "hide"
+
       - type: vertical-stack
         cards:
           - type: entity-filter
@@ -266,14 +288,81 @@ views:
                 icon: 'mdi:lightbulb-outline'
           - type: iframe
             title: Camara Oficina
-            url: http://192.168.31.193:8081
-            aspect_ratio: 50%
+            url: http://192.168.31.25:8081
+            aspect_ratio: 70%
+          - type: iframe
+ #           title: grafica
+            url: http://192.168.31.193:3000/render/d-solo/oxvPjQgRk/precio?panelId=2&orgId=1&from=1551182038316&to=1551268438317&width=1000&height=500&tz=UTC%2B01%3A00
+            aspect_ratio: 130%
 #        camera_image: camera.camara
 
     badges: []
     title: Seguridad
     icon: 'mdi:lock-reset'
   - cards:
+      - type: custom:compact-custom-header
+        notifications: "hide"
+        voice: "hide"
+        menu: "hide"
+
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:bignumber-card
+                title: Precio actual
+                entity: sensor.precio_actual
+                scale: 25px 
+              - type: custom:bignumber-card
+                title: Precio Medio
+                entity: sensor.precio_medio
+                scale: 25px
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:bignumber-card
+                title: Precio Minimo
+                entity: sensor.precio_minimo
+                scale: 25px 
+              - type: custom:bignumber-card
+                title: Precio Maximo
+                entity: sensor.precio_maximo
+                scale: 25px
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:bignumber-card
+                title: Hora Precio Minimo
+                entity: sensor.hora_precio_minimo
+                scale: 25px 
+              - type: custom:bignumber-card
+                title: Hora Precio Maximo
+                entity: sensor.hora_precio_maximo
+                scale: 25px
+
+          - type: sensor
+            entity: sensor.precio_actual
+            name: Precio Actual
+            icon: 'mdi:chart-line'
+            graph: line
+            detail: 2
+
+          - type: sensor
+            entity: sensor.power
+            name: Potencia consumida
+            icon: 'mdi:chart-line'
+            graph: line
+            detail: 2
+
+    badges: []
+    title: Precio Luz
+    icon: 'mdi:chart-line'
+  - cards:
+      - type: custom:compact-custom-header
+        notifications: "hide"
+        voice: "hide"
+        menu: "hide"
+
       - type: picture-elements
        # aspect_ratio: 100%
         image: /local/floorplan/oficina2.png
@@ -333,4 +422,8 @@ resources:
   - url: /local/button-card.js
     type: module
   - url: /local/custom-ui/weather-card/weather-card.js
+    type: module
+  - url: /local/bignumber-card.js
+    type: module
+  - url: /local/custom-lovelace/compact-custom-header/compact-custom-header.js?v=0.0.1
     type: module

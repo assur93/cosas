@@ -113,7 +113,7 @@
   trigger:
   - payload: 'ON'
     platform: mqtt
-    topic: cameras/motion
+    topic: camera1/motion
   condition: []
   action:
   - data:
@@ -308,20 +308,36 @@
     value_template: '{{ trigger.payload_json.click == "single" }}'
   action:
   - data:
-      entity_id: automation.alarma
-    service: automation.turn_on
+      payload: 'on'
+      topic: hola
+    service: mqtt.publish
 - id: '1550131646503'
   alias: alarma_off
+  trigger:
+  - payload: 'on'
+    platform: mqtt
+    topic: hola
+  condition: []
+  action:
+  - delay: 00:01:00
+  - alias: ''
+    data:
+      payload: 'off'
+      topic: hola
+    service: mqtt.publish
+- id: '1560131587579'
+  alias: apagar_camara
   trigger:
   - platform: mqtt
     topic: zigbee2mqtt/pastilla
   condition:
   - condition: template
-    value_template: '{{ trigger.payload_json.click == "double" }}'
+    value_template: '{{ trigger.payload_json.click == "long" }}'
   action:
   - data:
-      entity_id: automation.alarma
-    service: automation.turn_off
+      payload: apagar
+      topic: hola
+    service: mqtt.publish
 - id: '1550132125368'
   alias: cube_180
   trigger:
@@ -395,8 +411,8 @@
   action:
   - data_template:
       entity_id: light.gateway_light_7811dce1fa8e
-      brightness: >-
-       {{ states.light.gateway_light_7811dce1fa8e.attributes.brightness | int + 15 }}
+      brightness: '{{ states.light.gateway_light_7811dce1fa8e.attributes.brightness
+        | int + 15 }}'
     service: light.turn_on
 - id: '1550140696123'
   alias: menos_brillo
@@ -412,8 +428,8 @@
   action:
   - data_template:
       entity_id: light.gateway_light_7811dce1fa8e
-      brightness: >-
-       {{ states.light.gateway_light_7811dce1fa8e.attributes.brightness | int - 15 }}
+      brightness: '{{ states.light.gateway_light_7811dce1fa8e.attributes.brightness
+        | int - 15 }}'
     service: light.turn_on
 - id: '1550140685123'
   alias: mas_color
@@ -430,8 +446,9 @@
   - data_template:
       entity_id: light.gateway_light_7811dce1fa8e
       hs_color:
-        - "{{ (15 + (state_attr('light.gateway_light_7811dce1fa8e', 'hs_color')[0] or 0)) % 360 }}"
-        - 100
+      - '{{ (15 + (state_attr(''light.gateway_light_7811dce1fa8e'', ''hs_color'')[0]
+        or 0)) % 360 }}'
+      - 100
     service: light.turn_on
 - id: '1550140675123'
   alias: menos_color
@@ -448,8 +465,9 @@
   - data_template:
       entity_id: light.gateway_light_7811dce1fa8e
       hs_color:
-        - "{{ ((state_attr('light.gateway_light_7811dce1fa8e', 'hs_color')[0] or 0) - 15) % 360 }}"
-        - 100
+      - '{{ ((state_attr(''light.gateway_light_7811dce1fa8e'', ''hs_color'')[0] or
+        0) - 15) % 360 }}'
+      - 100
     service: light.turn_on
 - id: '1550340313287'
   alias: cubo_shake
@@ -472,3 +490,47 @@
   - data:
       entity_id: automation.menos_color
     service: automation.toggle
+- id: '1551190664439'
+  alias: bucle_on
+  trigger:
+  - entity_id: input_boolean.bucle
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - delay: 00:02:00
+  - data_template:
+      payload_template: '{{ states.sensor.precio_sum.state }}'
+      topic: precio
+    service: mqtt.publish
+  - data:
+      entity_id: input_boolean.bucle
+    service: input_boolean.toggle
+- id: '1551191161699'
+  alias: bucle_off
+  trigger:
+  - entity_id: input_boolean.bucle
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - delay: 00:02:00
+  - data_template:
+      payload_template: '{{ states.sensor.precio_sum.state }}'
+      topic: precio
+    service: mqtt.publish
+  - data:
+      entity_id: input_boolean.bucle
+    service: input_boolean.toggle
+- id: '1551192334929'
+  alias: bucle_start
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.bucle
+    service: input_boolean.toggle
