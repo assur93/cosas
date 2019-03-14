@@ -13,6 +13,8 @@ homeassistant:
   # Customization file
   customize: !include customize.yaml
 
+system_health:
+
 http:
   api_password: insega1993
 
@@ -96,6 +98,27 @@ map:
 # Track the sun
 sun:
 
+utility_meter:
+  energia_diaria:
+    source: sensor.precio_sum
+    cycle: daily
+
+  energia_mes:
+    source: sensor.power
+    cycle: monthly
+
+variable:
+  var_b:
+    value: 0
+    restore: true
+  var_a:
+    restore: true
+  var_c:
+    value: 0
+    restore: true
+  var_d:
+    restore: true
+  
 weather:
   - platform: darksky
     api_key: d08c3b10c05aaa24c33d220049d9540f
@@ -124,6 +147,23 @@ binary_sensor:
     state_topic: dummy/floorplan/sensor
     name: floorplan
 
+cover:
+  - platform: mqtt
+    name: "persian"
+    command_topic: "shellies/shellyswitch-134A67/roller/0/command"
+    state_topic: "shellies/shellyswitch-134A67/roller/0"
+    position_topic: "shellies/shellyswitch-134A67/roller/0/pos"
+    set_position_topic: "shellies/shellyswitch-134A67/roller/0/command/pos"
+    payload_open: "open"
+    payload_close: "close"
+    payload_stop: "stop"
+    state_open: "open"
+    state_close: "close"
+    retain: false
+    position_open: 100
+    position_closed: 0
+    optimistic: false
+
 switch:
   - platform: rpi_gpio
     ports:
@@ -137,6 +177,44 @@ switch:
     payload_on: "ON"
     payload_off: "OFF"
     retain: true
+
+#  - platform: mqtt
+#    name: "persiana"
+#    command_topic: "shellies/shellyswitch-134A67/roller/0/command"
+#    position_topic: "shellies/shellyswitch-134A67/roller/0/pos"
+#    set_position_topic: "shellies/shellyswitch-134A67/roller/0/command/pos"
+#    qos: 1
+#    payload_open: "open"
+#    payload_close: "close"
+#    payload_stop: "stop"
+#    retain: false
+#    position_open: 100
+#    position_closed: 0
+#    optimistic: false
+
+  - platform: mqtt
+    name: "roller1"
+    state_topic: "shellies/shellyswitch-134A67/roller/0"
+    command_topic: "shellies/shellyswitch-134A67/roller/0/command"
+    payload_on: "open"
+    payload_off: "nada"
+    retain: false
+
+  - platform: mqtt
+    name: "roller6"
+    state_topic: "shellies/shellyswitch-134A67/roller/0"
+    command_topic: "shellies/shellyswitch-134A67/roller/0/command"
+    payload_on: "close"
+    payload_off: "nada"
+    retain: false
+
+  - platform: mqtt
+    name: "roller7"
+    state_topic: "shellies/shellyswitch-134A67/roller/0"
+    command_topic: "shellies/shellyswitch-134A67/roller/0/command"
+    payload_on: "stop"
+    payload_off: "nada"
+    retain: false
 
   - platform: mqtt
     name: "shelly1"
@@ -182,6 +260,12 @@ input_boolean:
   incognito:
     initial: off
   bucle:
+    initial: off
+  roller2:
+    initial: off
+  roller3:
+    initial: off
+  roller4:
     initial: off
 
 lock:
@@ -334,10 +418,10 @@ sensor:
   - platform: template
     sensors:
       precio_act: 
-        value_template: "{{ ((states.sensor.power.state | float * 10)) | round(4) }}"
-        unit_of_measurement: '€/h'
+        value_template: "{{ ((states.sensor.act.state | float) + (states.sensor.power.state | float)) | round(4) }}"
+        unit_of_measurement: '€'
       precio_sum: 
-        value_template: "{{ ((states.sensor.power.state | float * 1/30000) * (states.sensor.precio_actual.state | float)) | round(10) }}"
+        value_template: "{{ ((states.sensor.power.state | float * 1/30000) * (states.sensor.precio_actual.state | float)) | round(5) }}"
         unit_of_measurement: '€'
 #        scan_interval: 10
       termo_batery:

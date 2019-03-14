@@ -534,3 +534,74 @@
   - data:
       entity_id: input_boolean.bucle
     service: input_boolean.toggle
+- id: '1551436117786'
+  alias: open
+  trigger:
+  - entity_id: input_boolean.roller2
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: cover.persian
+    service: cover.open_cover
+  - data:
+      entity_id: input_boolean.roller3
+    service: input_boolean.turn_off
+  - data:
+      payload: nada
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+- id: '1551435117786'
+  alias: open2
+  trigger:
+  - entity_id: input_boolean.roller3
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: cover.persian
+    service: cover.close_cover
+  - data:
+      entity_id: input_boolean.roller2
+    service: input_boolean.turn_off
+  - data:
+      payload: nada
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+- id: '1551454965324'
+  alias: open3
+  trigger:
+  - payload: stop
+    platform: mqtt
+    topic: shellies/shellyswitch-134A67/roller/0
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.roller2
+    service: input_boolean.turn_off
+  - data:
+      entity_id: input_boolean.roller3
+    service: input_boolean.turn_off
+- id: '1551714261598'
+  alias: consumo_dia
+  trigger:
+  - at: '23:59:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      payload: 20
+      topic: consumo/dia
+    service: mqtt.publish
+  - data: {}
+    service: script.mes
+- id: '1551715628795'
+  alias: loop
+  trigger:
+  - platform: time_pattern
+    minutes: /2
+  condition: []
+  action:
+  - service: script.dia
