@@ -1,33 +1,26 @@
 views:
   - cards:
       - type: custom:compact-custom-header
-        notifications: "hide"
-        voice: "hide"
-        menu: "clock"
+        notifications: hide
+        voice: clock
+        menu: hide
+        redirect: false
         clock_format: 24
 
       - type: vertical-stack
         cards:
-
-          - type: horizontal-stack
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
             cards:
 
-              - type: iframe
-                url: /local/wallpapers/sivsa14.jpg
-                aspect_ratio: 42%
+              - type: custom:label-card
+                title: Personas en Casa
+                scale: 20px
+                align: center
 
-              - type: iframe
-                url: /local/wallpapers/sivsa14.jpg
-                aspect_ratio: 42%
-
-          - type: iframe
-            url: /local/wallpapers/sivsa10.jpg
-            aspect_ratio: 21%
-
-          - type: horizontal-stack
-            cards:
-              - type: sensor
-                entity: sensor.time
               - type: entity-filter
                 entities:
                   - device_tracker.asus_z00ad
@@ -35,7 +28,6 @@ views:
                   - home
                 card:
                   type: glance
-                  title: En Casa
                   show_state: false
           - type: entities
             title: Aceso a Casa
@@ -69,12 +61,6 @@ views:
               type: glance
               title: Notificaciones
               show_state: false
-          - type: sensor
-            entity: sensor.temper_temperature
-            name: Temperatura
-            icon: 'mdi:thermometer'
-            graph: line
-            detail: 2
 
           - type: custom:mini-graph-card
             name: Temperatura Salon
@@ -134,9 +120,10 @@ views:
     icon: 'mdi:information-outline'
   - cards:
       - type: custom:compact-custom-header
-        notifications: "hide"
-        voice: "hide"
-        menu: "clock"
+        notifications: hide
+        voice: clock
+        menu: hide
+        redirect: false
         clock_format: 24
 
       - type: vertical-stack
@@ -146,22 +133,128 @@ views:
             type: thermostat
           - type: horizontal-stack
             cards:
-              - type: sensor
-                entity: sensor.calefaccion_activa_hoy
-                name: Calefaccion hoy
-                icon: 'mdi:radiator'
+# ---------------------------------------------------------- 1
+              - type: custom:vertical-style-card
+                style:
+                  font_size: 32px
+                  border: true
+                  background_color: rgb(255,255,255)
+                cards:
+                  - type: horizontal-stack
+                    cards:
+                      - type: picture-elements
+                        image: /local/icons/heater4.png
+                        elements:
+                          - type: image
+                            tap_action: none
+                            image: /local/icons/vacio.png
+                            style:
+                              top: 50%
+                              left: 50%
+                              width: 1
+
+                      - type: vertical-stack
+                        cards:
+
+                          - type: custom:big-card4
+#                            title: Uso Hoy
+                            scale: 5px
+
+                          - type: custom:big-card4
+                            title: Uso Hoy
+                            scale: 15px
+
+                          - type: custom:bignumber-card
+#                            title: Precio actual
+                            entity: sensor.calefaccion_activa_hoy
+                            scale: 20px 
+
+#                  - type: picture-elements
+#                    image: /local/icons/texto9.png
+#                    elements:
+#                      - type: image
+#                        tap_action: none
+#                        image: /local/icons/vacio.png
+#                        style:
+#                          top: 50%
+#                          left: 50%
+#                          width: 1%     
+
+# ---------------------------------------------------------------------------
+
               - type: sensor
                 entity: sensor.calefaccion_activa_ayer
-                name: Calefaccion ayer
+                name: Uso ayer
                 icon: 'mdi:radiator'
-          - type: entities
-            entities:
-              - entity: input_datetime.lunes_inicio
-              - entity: input_datetime.lunes_final
-              - entity: input_number.temperatura1
-              - entity: group.lunes
-            show_header_toggle: false
-            title: Lunes
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: custom:big-card4
+                title: Uso de la Calefaccion
+                scale: 20px
+
+              - type: entities
+                show_header_toggle: false
+                entities:
+                  - sensor.calefaccion_activa_hoy
+                  - sensor.calefaccion_activa_ayer
+#              - weblink.insega
+
+# --------------------------------------------------------------------- lunes
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Lunes
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.lunes
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.lunes
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.lunes_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.lunes_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura1
+                      showValue: true
+                      min: 15
+
+# ---------------------------------------------------------- Martes
+
           - type: entities
             entities:
               - entity: input_datetime.martes_inicio
@@ -170,6 +263,9 @@ views:
               - entity: group.lunes
             show_header_toggle: true
             title: Martes
+
+# ---------------------------------------------------------- Miercoles
+
           - type: entities
             entities:
               - entity: input_datetime.miercoles_inicio
@@ -215,18 +311,19 @@ views:
     title: Climatizacion
     icon: 'mdi:radiator'
 
-#############################################################################
+############################################################################# CASA
 
   - cards:
       - type: custom:compact-custom-header
-        notifications: "hide"
-        voice: "hide"
-        menu: "clock"
+        notifications: hide
+        voice: clock
+        menu: hide
+        redirect: false
         clock_format: 24
 
       - type: vertical-stack
         cards: 
-
+          
           - type: picture-elements
             image: /local/icons/banner1.png
             elements:
@@ -238,94 +335,70 @@ views:
                   top: 50%
                   left: 50%
                   width: 1%
-# ----------------------------------------------------------------- 1
+
+# ----------------------------------------------------------------- 1 CASA
+
           - type: custom:vertical-style-card
-#            title: Habitacion
             style:
               font_size: 32px
               border: true
-              background_color: rgb(255,255,25)
+              background_color: rgb(255,255,255)
             cards:
-
               - type: picture-elements
-                image: /local/icons/fondo8.png
+                image: /local/icons/blanco.png
                 elements:
                   - type: image
-                    entity: cover.persian
                     tap_action: none
-                    image: /local/icons/persiana.png
+                    image: /local/icons/vacio.png
                     style:
                       top: 50%
                       left: 50%
-                      width: 50%                            
-    
+                      width: 1
+
               - type: horizontal-stack
-                cards:               
-
-#                  - type: "custom:button-card"
-#                   name: Luz Habitacion
-#                    show_state: true
-#                    entity: switch.luz_ofi
-#                    icon: 'mdi:lightbulb'
-#                    action: toggle
-#                    color: rgb(255,193,0)
-#                    color_off: rgb(60,60,60)
-
-#                  - type: "custom:button-card"
-#                    color_type: icon
-#                    entity: switch.shelly21
-#                    icon: /local/icons/garage.png
-#                    size: 100%
-#                    color: rgb(251,205,65)
-
+                cards:
                   - type: picture-elements
-                    image: /local/icons/persiana1.png
+                    image: /local/icons/bomb5.png
                     elements:
                       - type: image
-                        entity: switch.shelly2
-                        tap_action:
-                          action: toggle
+                        tap_action: none
                         image: /local/icons/vacio.png
                         style:
                           top: 50%
                           left: 50%
-                        # height: 100%
                           width: 1
 
-#                  - type: "custom:button-card"
-#                    color_type: blnak-card
-#                    color: rgb(255,255,255)
-#
-#                  - type: "custom:button-card"
-#                    color_type: blnak-card
-#                    color: rgb(255,255,255)
-
                   - type: picture-elements
-                    image: /local/icons/fondo6.png
+                    image: /local/icons/fondoa.png
                     elements:
                       - type: image
                         entity: switch.shelly2
                         tap_action: 
                           action: toggle
-                        image: /local/icons/ON.png
+                        image: /local/icons/ON-blue.png
                         state_image:
-                          "on": /local/icons/ON.png
-                          "off": /local/icons/OFF.png
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
                         style:
-                          top: 60%
+                          top: 65%
                           left: 65%
-                          width: 35%         
+                          width: 35%
 
-#                  - type: "custom:button-card"
-#                name: Luz Habitacion
-#                    show_state: false
-#                    entity: switch.shelly2
-#                    icon: 'mdi:power-standby'
-#                    size: 80%
-#                    color_type: card
-#                    action: toggle
-#                    color: rgb(212,0,0)
-#                    color_off: rgb(60,60,60)
+              - type: horizontal-stack
+                cards:
+
+                  - type: custom:big-card4
+                    title: Luz Cocina
+                    scale: 15px
+
+                  - type: custom:button-card
+                    color_type: blank-card
+
+                  - type: custom:button-card
+                    color_type: blank-card
+
+                  - type: custom:button-card
+                    color_type: blank-card
 
 #          - type: entity-button
 #            name: Luz Xiaomi
@@ -336,60 +409,45 @@ views:
 #              action: more-info
 #            entity: light.gateway_light_7811dce1fa8e
 
-#------------------------------------------------------------------2
+#------------------------------------------------------------------2 CASA
 
           - type: custom:vertical-style-card
-#            title: Habitacion
             style:
               font_size: 32px
               border: true
               background_color: rgb(255,255,255)
             cards:
-#              - type: markdown
-#                content: >
-#                  >>> ##  Persiana Cocina
 
               - type: picture-elements
-                image: /local/icons/fondo8.png
+                image: /local/icons/blanco.png
                 elements:
                   - type: image
-                    entity: cover.persian
                     tap_action: none
-                    image: /local/icons/persiana.png
+                    image: /local/icons/vacio.png
                     style:
                       top: 50%
                       left: 50%
-                      width: 50%                            
+                      width: 1
 
               - type: horizontal-stack
                 cards:
 
-                  - type: picture-elements
-                    image: /local/icons/persiana3.png
-                    elements:
-                      - type: image
-#                        entity: cover.persian
-                        tap_action: none
-                        image: /local/icons/persiana1.png
-                        style:
-                          top: 50%
-                          left: 30%
-                          width: 1%
-
-                      - type: image
-#                        entity: cover.persian
-                        tap_action: none
-                        image: /local/icons/persiana.png
-                        style:
-                          top: 90%
-                          left: 41%
-                          width: 1%
-
-#                  - type: "custom:button-card"
-#                    color_type: icon
-#                    icon: 'mdi:blinds'
-#                    size: 50%
-#                    color: rgb(0,0,0)
+                  - type: vertical-stack
+                    cards:
+                      - type: picture-elements
+                        image: /local/icons/bomb5.png
+                        elements:
+                          - type: image
+                            tap_action: none
+                            image: /local/icons/vacio.png
+                            style:
+                              top: 50%
+                              left: 30%
+                              width: 1%
+                      - type: custom:label-card
+                        title: Persiana Cocina
+                        scale: 15px
+                        align: left
 
                   - type: vertical-stack
                     cards:
@@ -398,96 +456,106 @@ views:
                         cards:
 
                           - type: picture-elements
-                            image: /local/icons/fondo10.png
+                            image: /local/icons/fondo11.png
                             elements:
                               - type: image
-                                entity: input_boolean.roller2
+                                entity: switch.roller1
                                 tap_action:
                                   action: toggle
-                                image: /local/icons/arrow-up.png
+                                state_image:
+                                  "on": /local/icons/up-arrow.png
+                                  "off": /local/icons/arriba-gris.png
+                                image: /local/icons/up-arrow.png
                                 style:
-                                  top: 70%
+                                  top: 60%
                                   left: 20%
-                                  width: 20%  
+                                  width: 25%  
 
                               - type: image
                                 entity: switch.roller7
                                 tap_action:
                                   action: toggle
-                                image: /local/icons/stop.png
+                                state_image:
+                                  "on": /local/icons/Stop-ull.png
+                                  "off": /local/icons/stop-gris.png
+                                image: /local/icons/Stop-ull.png
                                 style:
-                                  top: 70%
+                                  top: 60%
                                   left: 50%
-                                  width: 15%  
+                                  width: 25%  
 
                               - type: image
-                                entity: input_boolean.roller3
+                                entity: switch.roller6
                                 tap_action:
                                   action: toggle
-                                image: /local/icons/arrow-down.png
+                                state_image:
+                                  "on": /local/icons/down-arrow-empy.png
+                                  "off": /local/icons/abajo-gris.png
+                                image: /local/icons/down-arrow-empy.png
                                 style:
-                                  top: 70%
+                                  top: 60%
                                   left: 80%
-                                  width: 20%  
-
-
-#                          - type: "custom:button-card"
-#                            entity: input_boolean.roller2
-#                            icon: 'mdi:arrow-up-bold'
-#                            action: toggle
-#                            size: 90%
-#                            color: rgb(22,143,82)
-#                            color_off: rgb(60,60,60)#
-#
-#                          - type: "custom:button-card"
-#                            entity: switch.roller7
-#                            icon: 'mdi:stop'
-#                            action: toggle
-#                            size: 100%
-#                            color: rgb(22,143,82)
-#                            color_off: rgb(60,60,60)
-#
-#                          - type: "custom:button-card"
-#                            entity: input_boolean.roller3
-#                            icon: 'mdi:arrow-down-bold'
-#                            action: toggle
-#                            size: 90%
-#                            color: rgb(22,143,82)
-#                            color_off: rgb(60,60,60)
+                                  width: 25%  
 
                       - type: custom:slider-var
                         entity: cover.persian
+
+#              - type: horizontal-stack
+#                cards:
+
+#                  - type: custom:big-card4
+#                    title: Persiana Cocina
+#                    scale: 15px
+
+#                  - type: custom:button-card
+#                    color_type: blank-card
+
+#                  - type: custom:button-card
+#                    color_type: blank-card
+
+#                  - type: custom:button-card
+#                    color_type: blank-card
+
+
+
 #------------------------------------------------------------ 3                       
-          - type: entities
-            title: Condiciones ambientales
-            show_header_toggle: false
-            entities:
-              - entity: sensor.temper_temperature
-                name: Temp BLE
-              - entity: sensor.temperatura
-                name: Temperatura
-                icon: 'mdi:thermometer' 
-              - entity: sensor.humedad
-                name: Humedad
-                icon: 'mdi:water-percent'
-              - entity: sensor.presion
-                name: Presion
-                icon: 'mdi:weather-windy'
-          - type: sensor
-            entity: sensor.power
-            name: Consumo energetico
-            icon: 'mdi:chart-bar'
-            graph: line
-            detail: 1         
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+
+              - type: custom:big-card4
+                title: Condiciones Ambientales
+                scale: 20px
+
+              - type: entities
+                show_header_toggle: false
+                entities:
+                  - entity: sensor.temper_temperature
+                    name: Temp BLE
+                    icon: 'mdi:thermometer-lines'
+                  - entity: sensor.humedad
+                    name: Humedad
+                    icon: 'mdi:water-percent'
+          
+# ------------------------------------------------------------ Banner
+
+          - type: custom:img-link
+            image: http://i.picasion.com/pic89/bca4456f17c08b47b25f6f9371323d1f.gif
+            url: https://www.insegaenergia.com
 
     badges: []
     title: Casa
     icon: 'mdi:home-outline'
   - cards:
       - type: custom:compact-custom-header
-        notifications: "hide"
-        voice: "hide"
-        menu: "clock"
+        notifications: hide
+        voice: clock
+        menu: hide
+        redirect: false
         clock_format: 24
 
       - type: vertical-stack
@@ -551,79 +619,133 @@ views:
     icon: 'mdi:lock-reset'
   - cards:
       - type: custom:compact-custom-header
-        notifications: "hide"
-        voice: "hide"
-        menu: "clock"
+        notifications: hide
+        voice: clock
+        menu: hide
+        redirect: false
         clock_format: 24
 
       - type: vertical-stack
         cards:
-          - type: horizontal-stack
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
             cards:
-              - type: custom:bignumber-card
-                title: Precio actual
-                entity: sensor.precio_actual
-                scale: 25px 
-              - type: custom:bignumber-card
-                title: Precio Medio
-                entity: sensor.precio_medio
-                scale: 25px
+              - type: custom:label-card
+                title: Precio de la Energia
+                scale: 20px                
 
-          - type: horizontal-stack
+              - type: entities
+                entities:
+                  - entity: sensor.precio_actual
+                    name: Precio Actual
+                    icon: 'mdi:finance'
+                  - entity: sensor.precio_medio
+                    name: Precio Medio
+                    icon: 'mdi:coin'
+                  - entity: sensor.hora_precio_minimo
+                    name: Hora de Precio Minimo
+                    icon: 'mdi:clock-outline'
+                  - entity: sensor.precio_minimo
+                    name: Precio Minimo
+                    icon: 'mdi:elevation-decline'
+                  - entity: sensor.hora_precio_maximo
+                    name: Hora de Precio Maximo
+                    icon: 'mdi:clock-outline'
+                  - entity: sensor.precio_maximo
+                    name: Precio Maximo
+                    icon: 'mdi:elevation-rise'
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
             cards:
-              - type: custom:bignumber-card
-                title: Precio Minimo
-                entity: sensor.precio_minimo
-                scale: 25px 
-              - type: custom:bignumber-card
-                title: Precio Maximo
-                entity: sensor.precio_maximo
-                scale: 25px
+              - type: custom:label-card
+                title: Consumo Energetico
+                scale: 20px                
 
-          - type: horizontal-stack
-            cards:
-              - type: custom:bignumber-card
-                title: Hora Precio Minimo
-                entity: sensor.hora_precio_minimo
-                scale: 25px 
-              - type: custom:bignumber-card
-                title: Hora Precio Maximo
-                entity: sensor.hora_precio_maximo
-                scale: 25px
+              - type: entities
+                entities:
+                  - entity: variable.var_b
+                    name: Consumo Diario €
+                    icon: 'mdi:calendar-today'
+                  - entity: variable.var_d
+                    name: Consumo Mensual €
+                    icon: 'mdi:calendar-range'
 
-          - type: horizontal-stack
-            cards:
-              - type: custom:bignumber-card
-                title: Consumo diario
-                entity: variable.var_b
-                scale: 25px 
-              - type: custom:bignumber-card
-                title: Consumo Mensual
-                entity: variable.var_d
-                scale: 25px
+#          - type: custom:img-link28
+#            entity: cover.persian
+#
+            image: /local/icons/ON.png
 
-          - type: sensor
-            entity: sensor.precio_actual
-            name: Precio Actual
-            icon: 'mdi:chart-line'
-            graph: line
-            detail: 2
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:     
 
-          - type: sensor
-            entity: sensor.power
-            name: Potencia consumida
-            icon: 'mdi:chart-line'
-            graph: line
-            detail: 2
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.precio_actual
+                    name: Precio Actual
+                align_state: center
+                align_icon: left
+                name: Precio Actual
+                show:
+                  graph: bar
+                  labels: false
+                icon: 'mdi:chart-bar'
+                decimals: 3
+                more_info: false
+                points_per_hour: 1
+                animate: true
+                height: 200
+                line_color: rgb(0,0,160)
+                hour24: true
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:     
+
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.consumodia
+                    name: Consumo Diario
+                align_state: center
+                align_icon: left
+                name: Consumo ultimos 7 dias
+                show:
+                  graph: line
+                  labels: false
+                icon: 'mdi:chart-bar'
+                decimals: 3
+                more_info: false
+                points_per_hour: 1
+                animate: true
+                height: 200
+                hours_to_show: 168
+                line_color: rgb(0,0,160)
+                hour24: true
+
 
     badges: []
     title: Precio Luz
     icon: 'mdi:chart-line'
   - cards:
       - type: custom:compact-custom-header
-        notifications: "hide"
-        voice: "hide"
-        menu: "clock"
+        notifications: hide
+        voice: clock
+        menu: hide
+        redirect: false
         clock_format: 24
 
       - type: iframe
@@ -694,6 +816,10 @@ resources:
     type: module
   - url: /local/bignumber-card.js
     type: module
+  - url: /local/big-card3.js
+    type: module
+  - url: /local/big-card4.js
+    type: module
   - url: /local/custom-lovelace/compact-custom-header/compact-custom-header.js?v=0.0.1
     type: module
   - url: /local/vertical-stack-in-card.js?v=0.0.9
@@ -719,4 +845,34 @@ resources:
   - url: /local/custom-sea.js
     type: module
   - url: /local/beer-card.js
+    type: module
+  - url: /local/time-input-row.js
+    type: module
+  - url: /local/slider-entity.js
+    type: module
+  - url: 'https://fonts.googleapis.com/css?family=Roboto'
+    type: css
+  - url: /local/slider-9.js
+    type: module
+  - url: /local/label-card.js
+    type: module
+  - url: /local/custom-time4.js
+    type: module
+  - url: /local/ext-weblink.js?v=0
+    type: js
+  - url: /local/img-link.js?v=0
+    type: js
+  - url: /local/ext-link5.js?v=0
+    type: js
+  - url: /local/ext-link7.js?v=0
+    type: js
+  - url: /local/ext-link10.js?v=0
+    type: js
+  - url: /local/center-card4.js
+    type: module
+  - url: /local/cover-slider.js
+    type: module
+  - url: /local/cover-slider3.js
+    type: module
+  - url: /local/img-link28.js
     type: module

@@ -18,16 +18,6 @@ system_health:
 http:
   api_password: insega1993
 
-influxdb:
-  host: 192.168.31.193
-  port: 8086 
-  database: HA2
-  max_retries: 3
-  default_measurement: state
-  include:
-    entities:
-      - sensor.precio_mqtt
-
 introduction:
 
 panel_custom:
@@ -38,6 +28,7 @@ panel_custom:
     config: !include floorplan.yaml
 
 #ffmpeg:
+
 
 #camera:
 #   - platform: generic
@@ -98,15 +89,6 @@ map:
 # Track the sun
 sun:
 
-utility_meter:
-  energia_diaria:
-    source: sensor.precio_sum
-    cycle: daily
-
-  energia_mes:
-    source: sensor.power
-    cycle: monthly
-
 variable:
   var_b:
     value: 0
@@ -129,12 +111,9 @@ lovelace:
 
 climate:
   - platform: broadlinkHysen
-    name: termocasa
+    friendly_name: termocasa
     host: 192.168.31.112
     mac: 78:0f:77:d4:44:99
-    target_temp_default: 20
-    target_temp_step: 0.5
-    scan_interval: 15
 
 mqtt:
   broker: 192.168.31.193
@@ -158,7 +137,7 @@ cover:
     payload_close: "close"
     payload_stop: "stop"
     state_open: "open"
-    state_close: "close"
+    state_closed: "close"
     retain: false
     position_open: 100
     position_closed: 0
@@ -178,26 +157,12 @@ switch:
     payload_off: "OFF"
     retain: true
 
-#  - platform: mqtt
-#    name: "persiana"
-#    command_topic: "shellies/shellyswitch-134A67/roller/0/command"
-#    position_topic: "shellies/shellyswitch-134A67/roller/0/pos"
-#    set_position_topic: "shellies/shellyswitch-134A67/roller/0/command/pos"
-#    qos: 1
-#    payload_open: "open"
-#    payload_close: "close"
-#    payload_stop: "stop"
-#    retain: false
-#    position_open: 100
-#    position_closed: 0
-#    optimistic: false
-
   - platform: mqtt
     name: "roller1"
     state_topic: "shellies/shellyswitch-134A67/roller/0"
     command_topic: "shellies/shellyswitch-134A67/roller/0/command"
     payload_on: "open"
-    payload_off: "nada"
+    payload_off: "stop"
     retain: false
 
   - platform: mqtt
@@ -205,7 +170,7 @@ switch:
     state_topic: "shellies/shellyswitch-134A67/roller/0"
     command_topic: "shellies/shellyswitch-134A67/roller/0/command"
     payload_on: "close"
-    payload_off: "nada"
+    payload_off: "stop"
     retain: false
 
   - platform: mqtt
@@ -283,6 +248,18 @@ xiaomi_aqara:
 sensor:
   - platform: yr
 
+  - platform: aemet
+    name: AEMET
+    api_key: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYW1pYW5AaW5zZWdhLmVzIiwianRpIjoiMjc0ZWVmMTUtMmFjZC00YzIzLTg5OGYtZThlMmUzYzlkYmNmIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE1NTMxNzgxNzksInVzZXJJZCI6IjI3NGVlZjE1LTJhY2QtNGMyMy04OThmLWU4ZTJlM2M5ZGJjZiIsInJvbGUiOiIifQ.9YQKhWCa5hCuJ-xdf7JmE_Wk5q_WLYOtbIdF35gpGlE
+    station_id: 1495
+    monitored_conditions:
+      - temperature
+      - humidity
+      - pressure
+      - precipitation
+      - snow
+      - visibility
+
   - platform: scrape
     resource: http://www.tarifadeluz.com/
     name: precio_actual
@@ -350,6 +327,11 @@ sensor:
   - platform: mqtt
     name: cameramotion
     state_topic: "cameras/time"
+
+  - platform: mqtt
+    name: consumodia
+    state_topic: "consumo/dia"
+    unit_of_measurement: '€'
   
   - platform: mqtt
     name: "pres"
@@ -417,13 +399,9 @@ sensor:
 
   - platform: template
     sensors:
-      precio_act: 
-        value_template: "{{ ((states.sensor.act.state | float) + (states.sensor.power.state | float)) | round(4) }}"
-        unit_of_measurement: '€'
       precio_sum: 
         value_template: "{{ ((states.sensor.power.state | float * 1/30000) * (states.sensor.precio_actual.state | float)) | round(5) }}"
         unit_of_measurement: '€'
-#        scan_interval: 10
       termo_batery:
         value_template: "{{ states('sensor.bateria_termo')|float < 15 }}"
       puerta_princ_batery:

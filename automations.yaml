@@ -491,49 +491,70 @@
       entity_id: automation.menos_color
     service: automation.toggle
 - id: '1551190664439'
-  alias: bucle_on
+  alias: Autostop
   trigger:
-  - entity_id: input_boolean.bucle
+  - entity_id: switch.roller1
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.roller6
+    state: 'on'
+  action:
+  - data:
+      payload: stop
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+  - data:
+      payload: nada
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+  - data:
+      payload: open
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+- id: '1551191161699'
+  alias: openoff
+  trigger:
+  - entity_id: switch.roller6
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.roller1
+    state: 'on'
+  action:
+  - data:
+      payload: stop
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+  - data:
+      payload: nada
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+  - data:
+      payload: close
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
+- id: '1551192334929'
+  alias: closeoff
+  trigger:
+  - entity_id: switch.roller1
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: switch.roller6
     from: 'off'
     platform: state
     to: 'on'
   condition: []
   action:
-  - delay: 00:02:00
-  - data_template:
-      payload_template: '{{ states.sensor.precio_sum.state }}'
-      topic: precio
+  - data:
+      payload: nada
+      topic: shellies/shellyswitch-134A67/roller/0
     service: mqtt.publish
-  - data:
-      entity_id: input_boolean.bucle
-    service: input_boolean.toggle
-- id: '1551191161699'
-  alias: bucle_off
-  trigger:
-  - entity_id: input_boolean.bucle
-    from: 'on'
-    platform: state
-    to: 'off'
-  condition: []
-  action:
-  - delay: 00:02:00
-  - data_template:
-      payload_template: '{{ states.sensor.precio_sum.state }}'
-      topic: precio
-    service: mqtt.publish
-  - data:
-      entity_id: input_boolean.bucle
-    service: input_boolean.toggle
-- id: '1551192334929'
-  alias: bucle_start
-  trigger:
-  - event: start
-    platform: homeassistant
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.bucle
-    service: input_boolean.toggle
 - id: '1551436117786'
   alias: open
   trigger:
@@ -592,7 +613,7 @@
   condition: []
   action:
   - data:
-      payload: 20
+      payload_template: '{{ states.variable.var_b.state }}'
       topic: consumo/dia
     service: mqtt.publish
   - data: {}
@@ -605,3 +626,22 @@
   condition: []
   action:
   - service: script.dia
+- id: '1553168536176'
+  alias: closeon
+  trigger:
+  - entity_id: switch.roller6
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: switch.roller1
+    state: 'off'
+  - condition: state
+    entity_id: switch.roller7
+    state: 'off'
+  action:
+  - data:
+      payload: stop
+      topic: shellies/shellyswitch-134A67/roller/0
+    service: mqtt.publish
