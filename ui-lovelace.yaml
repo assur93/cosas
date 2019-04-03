@@ -2,65 +2,156 @@ views:
   - cards:
       - type: custom:compact-custom-header
         notifications: hide
-        voice: clock
-        menu: hide
+        voice: hide
+        menu: clock
         redirect: false
         clock_format: 24
 
       - type: vertical-stack
         cards:
+          - type: picture-elements
+            image: /local/icons/banner1.png
+            elements:
+              - type: image
+                tap_action: none
+                image: /local/icons/vacio.png
+                style:
+                  top: 50%
+                  left: 50%
+                  width: 1
+    badges: []
+    path: default_view
+    title: Presesntacion
+    icon: 'mdi:account'
+
+  - cards:
+      - type: custom:compact-custom-header
+        notifications: hide
+        voice: hide
+        menu: clock
+        redirect: false
+        clock_format: 24
+
+      - type: vertical-stack
+        cards:
+
+          - type: picture-elements
+            image: /local/icons/banner1.png
+            elements:
+              - type: image
+                tap_action: none
+                image: /local/icons/vacio.png
+                style:
+                  top: 50%
+                  left: 50%
+                  width: 1
+
           - type: custom:vertical-style-card
             style:
               font_size: 32px
               border: true
               background_color: rgb(255,255,255)
             cards:
-
               - type: custom:label-card
-                title: Personas en Casa
+                title: Acceso a Casa
                 scale: 20px
-                align: center
+                color: rgb(0,0,0)
 
-              - type: entity-filter
+              - type: entities
+                show_header_toggle: false
                 entities:
-                  - device_tracker.asus_z00ad
-                state_filter:
-                  - home
+                  - entity: lock.doorlock
+                    icon: 'mdi:door'
+                    name: Puerta de Entrada
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: custom:label-card
+                title: Luces Encendidas
+                scale: 20px
+
+              - type: conditional
+                conditions:
+                  - entity: switch.luz_ofi
+                    state: "on"
                 card:
-                  type: glance
-                  show_state: false
-          - type: entities
-            title: Aceso a Casa
-            show_header_toggle: false
-            entities:
-              - entity: lock.doorlock
-                icon: 'mdi:door'
-                name: Puerta de Entrada
-          - type: entity-filter
-            entities:
-              - entity: switch.luz_ofi
-                name: Luz oficina
-                icon: 'mdi:lightbulb-on-outline'
-            state_filter:
-              - "on"
-            card:
-              type: glance
-              title: Luces y Dispositivos Encendidos
-              show_state: false
-          - type: entity-filter
-            entities:
-              - entity: sensor.termo_batery
-                name: Sensor de Temperatura
-                icon: 'mdi:battery-alert'
-              - entity: sensor.puerta_princ_batery
-                name: Sensor Puerta Principal
-                icon: 'mdi:battery-alert'
-            state_filter:
-              - "True"
-            card:
-              type: glance
-              title: Notificaciones
-              show_state: false
+                  type: custom:custom-line
+                  name: Luz Oficina
+                  icon: 'mdi:lightbulb-on-outline'
+                  color: rgb(255,231,0)
+                  state: Encendida
+
+              - type: conditional
+                conditions:
+                  - entity: switch.shelly2
+                    state: "on"
+                card:
+                  type: custom:custom-line
+                  name: Luz Salon
+                  icon: 'mdi:lightbulb-on-outline'
+                  color: rgb(255,231,0)
+                  state: Encendida
+
+#          - type: entity-filter
+#            entities:
+#              - entity: switch.luz_ofi
+#                name: Luz oficina
+#                icon: 'mdi:lightbulb-on-outline'
+#            state_filter:
+#              - "on"
+#            card:
+#              type: glance
+#              title: Luces y Dispositivos Encendidos
+#              show_state: false
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: custom:label-card
+                title: Notificaciones de Baterias
+                scale: 20px
+
+              - type: conditional
+                conditions:
+                  - entity: sensor.puerta_princ_batery
+                    state: "True"
+                card:
+                  type: custom:custom-battery3
+                  entity: sensor.bateria_puerta_princ
+                  name: Bateria Puerta Principal
+                  unit: '%'
+
+              - type: conditional
+                conditions:
+                  - entity: sensor.termo_batery
+                    state: "True"
+                card:
+                  type: custom:custom-battery3
+                  entity: sensor.bateria_termo
+                  name: Bateria Termometro
+                  unit: '%'
+
+#          - type: entity-filter
+#            entities:
+#              - entity: sensor.termo_batery
+#                name: Sensor de Temperatura
+#                icon: 'mdi:battery-alert'
+#              - entity: sensor.puerta_princ_batery
+#                name: Sensor Puerta Principal
+#                icon: 'mdi:battery-alert'
+#            state_filter:
+#              - "True"
+#            card:
+#              type: glance
+#              title: Notificaciones
+#              show_state: false
 
           - type: custom:mini-graph-card
             name: Temperatura Salon
@@ -115,14 +206,14 @@ views:
             name: Vigo
       
     badges: []
-    path: default_view
+#    path: default_view
     title: Info
     icon: 'mdi:information-outline'
   - cards:
       - type: custom:compact-custom-header
         notifications: hide
-        voice: clock
-        menu: hide
+        voice: hide
+        menu: clock
         redirect: false
         clock_format: 24
 
@@ -131,61 +222,6 @@ views:
           - entity: climate.termocasa
             name: Termostato
             type: thermostat
-          - type: horizontal-stack
-            cards:
-# ---------------------------------------------------------- 1
-              - type: custom:vertical-style-card
-                style:
-                  font_size: 32px
-                  border: true
-                  background_color: rgb(255,255,255)
-                cards:
-                  - type: horizontal-stack
-                    cards:
-                      - type: picture-elements
-                        image: /local/icons/heater4.png
-                        elements:
-                          - type: image
-                            tap_action: none
-                            image: /local/icons/vacio.png
-                            style:
-                              top: 50%
-                              left: 50%
-                              width: 1
-
-                      - type: vertical-stack
-                        cards:
-
-                          - type: custom:big-card4
-#                            title: Uso Hoy
-                            scale: 5px
-
-                          - type: custom:big-card4
-                            title: Uso Hoy
-                            scale: 15px
-
-                          - type: custom:bignumber-card
-#                            title: Precio actual
-                            entity: sensor.calefaccion_activa_hoy
-                            scale: 20px 
-
-#                  - type: picture-elements
-#                    image: /local/icons/texto9.png
-#                    elements:
-#                      - type: image
-#                        tap_action: none
-#                        image: /local/icons/vacio.png
-#                        style:
-#                          top: 50%
-#                          left: 50%
-#                          width: 1%     
-
-# ---------------------------------------------------------------------------
-
-              - type: sensor
-                entity: sensor.calefaccion_activa_ayer
-                name: Uso ayer
-                icon: 'mdi:radiator'
 
           - type: custom:vertical-style-card
             style:
@@ -255,57 +291,297 @@ views:
 
 # ---------------------------------------------------------- Martes
 
-          - type: entities
-            entities:
-              - entity: input_datetime.martes_inicio
-              - entity: input_datetime.martes_final
-              - entity: input_number.temperatura2
-              - entity: group.lunes
-            show_header_toggle: true
-            title: Martes
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Martes
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.martes
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.martes
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.martes_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.martes_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura2
+                      showValue: true
+                      min: 15
 
 # ---------------------------------------------------------- Miercoles
 
-          - type: entities
-            entities:
-              - entity: input_datetime.miercoles_inicio
-              - entity: input_datetime.miercoles_final
-              - entity: input_number.temperatura3
-              - entity: group.lunes
-            show_header_toggle: false
-            title: Miercoles
-          - type: entities
-            entities:
-              - entity: input_datetime.jueves_inicio
-              - entity: input_datetime.jueves_final
-              - entity: input_number.temperatura4
-              - entity: group.jueves
-            show_header_toggle: false
-            title: Jueves
-          - type: entities
-            entities:
-              - entity: input_datetime.viernes_inicio
-              - entity: input_datetime.viernes_final
-              - entity: input_number.temperatura5
-              - entity: group.lunes
-            show_header_toggle: false
-            title: Viernes
-          - type: entities
-            entities:
-              - entity: input_datetime.sabado_inicio
-              - entity: input_datetime.sabado_final
-              - entity: input_number.temperatura6
-              - entity: group.lunes
-            show_header_toggle: false
-            title: Sabado
-          - type: entities
-            entities:
-              - entity: input_datetime.domingo_inicio
-              - entity: input_datetime.domingo_final
-              - entity: input_number.temperatura7
-              - entity: group.lunes
-            show_header_toggle: false
-            title: Domingo
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Miercoles
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.miercoles
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.miercoles
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.miercoles_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.miercoles_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura3
+                      showValue: true
+                      min: 15
+
+# ----------------------------------------------------------- Jueves
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Jueves
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.jueves
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.jueves
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.jueves_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.jueves_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura4
+                      showValue: true
+                      min: 15
+
+# ----------------------------------------------------------- Viernes
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Viernes
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.viernes
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.viernes
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.viernes_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.viernes_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura5
+                      showValue: true
+                      min: 15
+
+# ----------------------------------------------------------- Sabado
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Sabado
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.sabado
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.sabado
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.sabado_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.sabado_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura6
+                      showValue: true
+                      min: 15
+
+# ----------------------------------------------------------- Domingo
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Domingo
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: group.domingo
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: group.domingo
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.domingo_inicio
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.domingo_final
+
+                    - type: custom:slider-9
+                      entity: input_number.temperatura7
+                      showValue: true
+                      min: 15
 
     badges: []
     title: Climatizacion
@@ -316,8 +592,8 @@ views:
   - cards:
       - type: custom:compact-custom-header
         notifications: hide
-        voice: clock
-        menu: hide
+        voice: hide
+        menu: clock
         redirect: false
         clock_format: 24
 
@@ -553,61 +829,147 @@ views:
   - cards:
       - type: custom:compact-custom-header
         notifications: hide
-        voice: clock
-        menu: hide
+        voice: hide
+        menu: clock
         redirect: false
         clock_format: 24
 
       - type: vertical-stack
         cards:
-          - type: entity-filter
-            entities:
-              - entity: sensor.puerta_princ
-                name: Puerta pricipal abierta
-                icon: 'mdi:door-open'
-            state_filter:
-              - "False"
-            card:
-              type: glance
-              title: Puertas o Ventanas Abiertas
-              show_state: false
-          - type: entities
-            title: Sensores de presencia
-            show_header_toggle: false
-            entities:
-              - entity: sensor.pres
-                name: Sensor de presencia
-                icon: 'mdi:exit-run'
-              - entity: sensor.cameramotion
-                name: Camara Oficina
-                icon: 'mdi:video-outline'
-          - type: entities
-            title: Otras alertas
-            show_header_toggle: false
-            entities: 
-              - entity: sensor.doorlock
-                icon: 'mdi:door'
-                name: Puerta de Entrada
-              - entity: automation.alarma
-                name: Alarma
-                icon: 'mdi:shield'
-          - type: entities
-            title: Modo Ausencia
-            show_header_toggle: false
-            entities:
-              - entity: input_boolean.incognito
-                name: Estado
-                icon: 'mdi:incognito'
-              - entity: input_datetime.luces_encendido
-                name: Hora de encendido
-                icon: 'mdi:lightbulb-on-outline'
-              - entity: input_datetime.luces_apagado
-                name: Hora de apagado
-                icon: 'mdi:lightbulb-outline'
-          - type: iframe
-            title: Camara Oficina
-            url: http://192.168.31.25:8081
-            aspect_ratio: 70%
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: custom:label-card
+                title: Puertas o Ventanas Abiertas
+                scale: 20px
+                align: center
+
+#              - type: custom:custom-image18
+#                entity: switch.shelly2
+#                image: /local/icons/ON-blue.png
+#                url: https://www.insegaenergia.com
+
+#              - type: conditional
+#                conditions:
+#                  - entity: sensor.puerta_princ
+#                    state: "False"
+#                card:
+#                  type: custom:custom-image9
+#                  entity: cover.persian
+#                  name: Main Door Sensor
+#                  image: /local/icons/ON-blue.png
+#                  unit: '%'
+
+              - type: conditional
+                conditions:
+                  - entity: sensor.puerta_princ
+                    state: "False"
+                card:
+                  type: custom:custom-line
+                  name: Puerta Principal
+#                  icon: 'mdi:window-open'
+#                  color: rgb(0,0,0)
+#                  state: Open
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:              
+              - type: custom:label-card
+                title: Sensores de Presencia
+                align: center
+                scale: 20px
+              - type: entities
+                show_header_toggle: false
+                entities:
+                  - entity: sensor.pres
+                    name: Sensor de presencia
+                    icon: 'mdi:exit-run'
+                  - entity: sensor.cameramotion
+                    name: Camara Oficina
+                    icon: 'mdi:video-outline'
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:             
+              - type: custom:label-card
+                title: Otras Alertas
+                align: center
+                scale: 20px
+              - type: entities
+                show_header_toggle: false
+                entities: 
+                  - entity: sensor.doorlock
+                    icon: 'mdi:door'
+                    name: Puerta de Entrada
+                  - entity: automation.alarma
+                    name: Alarma
+                    icon: 'mdi:shield'
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:label-card
+                    title: Modo Ausencia
+                    align: left
+                    scale: 20px
+
+                  - type: picture-elements
+                    image: /local/icons/fondo12.png
+                    elements:
+                      - type: image
+                        entity: input_boolean.incognito
+                        tap_action:
+                          action: toggle
+                        image: /local/icons/ON-blue.png
+                        state_image:
+                          "on": /local/icons/ON-blue.png
+                          "off": /local/icons/OFF-blue.png
+                        style:
+                          top: 50%
+                          left: 87%
+                          width: 28%
+
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.incognito
+                    state: "on"
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:custom-time4
+                      entity: input_datetime.luces_encendido
+
+                    - type: custom:custom-time4
+                      entity: input_datetime.luces_apagado
+
+          - type: custom:vertical-style-card
+            style:
+              font_size: 32px
+              border: true
+              background_color: rgb(255,255,255)
+            cards:             
+              - type: custom:label-card
+                title: Camara de vigilancia
+                align: center
+                scale: 20px
+              - type: iframe
+                url: http://192.168.31.25:8081
+                aspect_ratio: 70%
 #          - type: iframe
 #           title: grafica
 #            url: http://192.168.31.193:3000/render/d-solo/oxvPjQgRk/precio?panelId=2&orgId=1&from=1551182038316&to=1551268438317&width=1000&height=500&tz=UTC%2B01%3A00
@@ -620,8 +982,8 @@ views:
   - cards:
       - type: custom:compact-custom-header
         notifications: hide
-        voice: clock
-        menu: hide
+        voice: hide
+        menu: clock
         redirect: false
         clock_format: 24
 
@@ -719,10 +1081,10 @@ views:
               - type: custom:mini-graph-card
                 entities:
                   - entity: sensor.consumodia
-                    name: Consumo Diario
+                    name: Consumo Ultimos 7 Dias
                 align_state: center
                 align_icon: left
-                name: Consumo ultimos 7 dias
+                name: Consumo Ultimos 7 Dias
                 show:
                   graph: line
                   labels: false
@@ -735,6 +1097,7 @@ views:
                 hours_to_show: 168
                 line_color: rgb(0,0,160)
                 hour24: true
+                lower_bound: 0
 
 
     badges: []
@@ -743,8 +1106,8 @@ views:
   - cards:
       - type: custom:compact-custom-header
         notifications: hide
-        voice: clock
-        menu: hide
+        voice: hide
+        menu: clock
         redirect: false
         clock_format: 24
 
@@ -876,3 +1239,14 @@ resources:
     type: module
   - url: /local/img-link28.js
     type: module
+  - url: /local/custom-type3.js
+    type: module
+  - url: /local/custom-line.js
+    type: module
+  - url: /local/custom-battery3.js
+    type: module
+  - url: /local/custom-image18.js?v=0
+    type: js
+  - url: /local/custom-line12.js
+    type: module
+

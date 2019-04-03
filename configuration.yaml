@@ -403,7 +403,7 @@ sensor:
         value_template: "{{ ((states.sensor.power.state | float * 1/30000) * (states.sensor.precio_actual.state | float)) | round(5) }}"
         unit_of_measurement: '€'
       termo_batery:
-        value_template: "{{ states('sensor.bateria_termo')|float < 15 }}"
+        value_template: "{{ states('sensor.bateria_termo')|float < 95 }}"
       puerta_princ_batery:
         value_template: "{{ states('sensor.bateria_puerta_princ')|float < 95 }}"
       calefaccion_modo:
