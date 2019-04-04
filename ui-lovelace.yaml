@@ -9,31 +9,6 @@ views:
 
       - type: vertical-stack
         cards:
-          - type: picture-elements
-            image: /local/icons/banner1.png
-            elements:
-              - type: image
-                tap_action: none
-                image: /local/icons/vacio.png
-                style:
-                  top: 50%
-                  left: 50%
-                  width: 1
-    badges: []
-    path: default_view
-    title: Presesntacion
-    icon: 'mdi:account'
-
-  - cards:
-      - type: custom:compact-custom-header
-        notifications: hide
-        voice: hide
-        menu: clock
-        redirect: false
-        clock_format: 24
-
-      - type: vertical-stack
-        cards:
 
           - type: picture-elements
             image: /local/icons/banner1.png
@@ -46,17 +21,13 @@ views:
                   left: 50%
                   width: 1
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Acceso a Casa
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:label-card
-                title: Acceso a Casa
-                scale: 20px
-                color: rgb(0,0,0)
-
               - type: entities
                 show_header_toggle: false
                 entities:
@@ -64,16 +35,13 @@ views:
                     icon: 'mdi:door'
                     name: Puerta de Entrada
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Luces Encendidas
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:label-card
-                title: Luces Encendidas
-                scale: 20px
-
               - type: conditional
                 conditions:
                   - entity: switch.luz_ofi
@@ -96,28 +64,13 @@ views:
                   color: rgb(255,231,0)
                   state: Encendida
 
-#          - type: entity-filter
-#            entities:
-#              - entity: switch.luz_ofi
-#                name: Luz oficina
-#                icon: 'mdi:lightbulb-on-outline'
-#            state_filter:
-#              - "on"
-#            card:
-#              type: glance
-#              title: Luces y Dispositivos Encendidos
-#              show_state: false
-
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Notificaciones de Baterias
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:label-card
-                title: Notificaciones de Baterias
-                scale: 20px
-
               - type: conditional
                 conditions:
                   - entity: sensor.puerta_princ_batery
@@ -137,21 +90,6 @@ views:
                   entity: sensor.bateria_termo
                   name: Bateria Termometro
                   unit: '%'
-
-#          - type: entity-filter
-#            entities:
-#              - entity: sensor.termo_batery
-#                name: Sensor de Temperatura
-#                icon: 'mdi:battery-alert'
-#              - entity: sensor.puerta_princ_batery
-#                name: Sensor Puerta Principal
-#                icon: 'mdi:battery-alert'
-#            state_filter:
-#              - "True"
-#            card:
-#              type: glance
-#              title: Notificaciones
-#              show_state: false
 
           - type: custom:mini-graph-card
             name: Temperatura Salon
@@ -206,7 +144,7 @@ views:
             name: Vigo
       
     badges: []
-#    path: default_view
+    path: default_view
     title: Info
     icon: 'mdi:information-outline'
   - cards:
@@ -223,22 +161,18 @@ views:
             name: Termostato
             type: thermostat
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Uso de la Calefaccion
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:big-card4
-                title: Uso de la Calefaccion
-                scale: 20px
-
               - type: entities
                 show_header_toggle: false
                 entities:
                   - sensor.calefaccion_activa_hoy
                   - sensor.calefaccion_activa_ayer
-#              - weblink.insega
 
 # --------------------------------------------------------------------- lunes
 
@@ -796,17 +730,13 @@ views:
 
 #------------------------------------------------------------ 3                       
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Condiciones Ambientales
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-
-              - type: custom:big-card4
-                title: Condiciones Ambientales
-                scale: 20px
-
               - type: entities
                 show_header_toggle: false
                 entities:
@@ -837,33 +767,13 @@ views:
       - type: vertical-stack
         cards:
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Puertas y Ventanas Abiertas
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:label-card
-                title: Puertas o Ventanas Abiertas
-                scale: 20px
-                align: center
-
-#              - type: custom:custom-image18
-#                entity: switch.shelly2
-#                image: /local/icons/ON-blue.png
-#                url: https://www.insegaenergia.com
-
-#              - type: conditional
-#                conditions:
-#                  - entity: sensor.puerta_princ
-#                    state: "False"
-#                card:
-#                  type: custom:custom-image9
-#                  entity: cover.persian
-#                  name: Main Door Sensor
-#                  image: /local/icons/ON-blue.png
-#                  unit: '%'
-
               - type: conditional
                 conditions:
                   - entity: sensor.puerta_princ
@@ -875,16 +785,14 @@ views:
 #                  color: rgb(0,0,0)
 #                  state: Open
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Sensores de Presencia
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:              
-              - type: custom:label-card
-                title: Sensores de Presencia
-                align: center
-                scale: 20px
+
               - type: entities
                 show_header_toggle: false
                 entities:
@@ -895,16 +803,14 @@ views:
                     name: Camara Oficina
                     icon: 'mdi:video-outline'
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Otras Alertas
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:             
-              - type: custom:label-card
-                title: Otras Alertas
-                align: center
-                scale: 20px
+
               - type: entities
                 show_header_toggle: false
                 entities: 
@@ -915,7 +821,7 @@ views:
                     name: Alarma
                     icon: 'mdi:shield'
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
             style:
               font_size: 32px
               border: true
@@ -957,16 +863,14 @@ views:
                     - type: custom:custom-time4
                       entity: input_datetime.luces_apagado
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Camara de Vigilancia
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:             
-              - type: custom:label-card
-                title: Camara de vigilancia
-                align: center
-                scale: 20px
+
               - type: iframe
                 url: http://192.168.31.25:8081
                 aspect_ratio: 70%
@@ -990,15 +894,13 @@ views:
       - type: vertical-stack
         cards:
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Precio de la Energia
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:label-card
-                title: Precio de la Energia
-                scale: 20px                
 
               - type: entities
                 entities:
@@ -1021,15 +923,13 @@ views:
                     name: Precio Maximo
                     icon: 'mdi:elevation-rise'
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
+            title: Consumo Energetico
             style:
-              font_size: 32px
+              font_size: 26px
               border: true
               background_color: rgb(255,255,255)
             cards:
-              - type: custom:label-card
-                title: Consumo Energetico
-                scale: 20px                
 
               - type: entities
                 entities:
@@ -1040,12 +940,9 @@ views:
                     name: Consumo Mensual €
                     icon: 'mdi:calendar-range'
 
-#          - type: custom:img-link28
-#            entity: cover.persian
-#
             image: /local/icons/ON.png
 
-          - type: custom:vertical-style-card
+          - type: custom:custom-vertical
             style:
               font_size: 32px
               border: true
@@ -1071,33 +968,26 @@ views:
                 line_color: rgb(0,0,160)
                 hour24: true
 
-          - type: custom:vertical-style-card
-            style:
-              font_size: 32px
-              border: true
-              background_color: rgb(255,255,255)
-            cards:     
-
-              - type: custom:mini-graph-card
-                entities:
-                  - entity: sensor.consumodia
-                    name: Consumo Ultimos 7 Dias
-                align_state: center
-                align_icon: left
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.consumodia
                 name: Consumo Ultimos 7 Dias
-                show:
-                  graph: line
-                  labels: false
-                icon: 'mdi:chart-bar'
-                decimals: 3
-                more_info: false
-                points_per_hour: 1
-                animate: true
-                height: 200
-                hours_to_show: 168
-                line_color: rgb(0,0,160)
-                hour24: true
-                lower_bound: 0
+            align_state: center
+            align_icon: left
+            name: Consumo Ultimos 7 Dias
+            show:
+              graph: line
+              labels: false
+            icon: 'mdi:chart-bar'
+            decimals: 3
+            more_info: false
+            points_per_hour: 1
+            animate: true
+            height: 200
+            hours_to_show: 168
+            line_color: rgb(0,0,160)
+            hour24: true
+            lower_bound: 0
 
 
     badges: []
@@ -1186,6 +1076,10 @@ resources:
   - url: /local/custom-lovelace/compact-custom-header/compact-custom-header.js?v=0.0.1
     type: module
   - url: /local/vertical-stack-in-card.js?v=0.0.9
+    type: js
+  - url: /local/vertical-card.js?v=0.0.9
+    type: js
+  - url: /local/custom-vertical.js?v=0.0.9
     type: js
   - url: /local/button-entity-row.js
     type: js
