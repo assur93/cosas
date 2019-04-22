@@ -7,7 +7,7 @@
   condition:
   - condition: time
     weekday:
-    - wed
+    - mon
   action:
   - data:
       entity_id: climate.termocasa
@@ -26,11 +26,80 @@
   condition:
   - condition: time
     weekday:
+    - mon
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: auto
+    service: climate.set_operation_mode
+- id: '1548858520405'
+  alias: martes_encendido
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.martes_inicio.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - tue
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: heat
+    service: climate.set_operation_mode
+  - data_template:
+      entity_id: climate.termocasa
+      temperature: '{{ states.input_number.temperatura2.state }}'
+    service: climate.set_temperature
+- id: '1548858596335'
+  alias: martes_apagado
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.martes_final.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - tue
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: auto
+    service: climate.set_operation_mode
+- id: '1548858520406'
+  alias: miercoles_encendido
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.miercoles_inicio.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
     - wed
   action:
   - data:
       entity_id: climate.termocasa
-    service: climate.turn_off
+      operation_mode: heat
+    service: climate.set_operation_mode
+  - data_template:
+      entity_id: climate.termocasa
+      temperature: '{{ states.input_number.temperatura3.state }}'
+    service: climate.set_temperature
+- id: '1548858596336'
+  alias: miercoles_apagado
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.miercoles_final.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - wed
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: auto
+    service: climate.set_operation_mode
 - id: '1548858560404'
   alias: jueves_encendido
   trigger:
@@ -63,7 +132,110 @@
   action:
   - data:
       entity_id: climate.termocasa
-    service: climate.turn_off
+      operation_mode: auto
+    service: climate.set_operation_mode
+- id: '1548858520407'
+  alias: viernes_encendido
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.viernes_inicio.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - fri
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: heat
+    service: climate.set_operation_mode
+  - data_template:
+      entity_id: climate.termocasa
+      temperature: '{{ states.input_number.temperatura5.state }}'
+    service: climate.set_temperature
+- id: '1548858596337'
+  alias: viernes_apagado
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.viernes_final.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - fri
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: auto
+    service: climate.set_operation_mode
+- id: '1548858520409'
+  alias: sabado_encendido
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.sabado_inicio.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: heat
+    service: climate.set_operation_mode
+  - data_template:
+      entity_id: climate.termocasa
+      temperature: '{{ states.input_number.temperatura6.state }}'
+    service: climate.set_temperature
+- id: '1548858596338'
+  alias: sabado_apagado
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.sabado_final.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: auto
+    service: climate.set_operation_mode
+- id: '1548858520409'
+  alias: domingo_encendido
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.domingo_inicio.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - sun
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: heat
+    service: climate.set_operation_mode
+  - data_template:
+      entity_id: climate.termocasa
+      temperature: '{{ states.input_number.temperatura7.state }}'
+    service: climate.set_temperature
+- id: '1548858596339'
+  alias: domingo_apagado
+  trigger:
+  - platform: template
+    value_template: '{{ states.sensor.time.state == states.input_datetime.domingo_final.state[0:5]
+      }}'
+  condition:
+  - condition: time
+    weekday:
+    - sun
+  action:
+  - data:
+      entity_id: climate.termocasa
+      operation_mode: auto
+    service: climate.set_operation_mode
 - id: '1549270063295'
   alias: persiana1
   trigger:

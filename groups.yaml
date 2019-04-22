@@ -1,7 +1,7 @@
-zones:
-  name: Zones
-  entities:
-    - binary_sensor.floorplan
+#zones:
+#  name: Zones
+#  entities:
+#    - binary_sensor.floorplan
 
 lunes:
   name: lunes
@@ -10,6 +10,20 @@ lunes:
   entities:
    - automation.lunes_apagado
    - automation.lunes_encendido
+martes:
+  name: martes
+  view: no
+  icon: 'mdi:check-circle'
+  entities:
+   - automation.martes_apagado
+   - automation.martes_encendido
+miercoles:
+  name: miercoles
+  view: no
+  icon: 'mdi:check-circle'
+  entities:
+   - automation.miercoles_apagado
+   - automation.miercoles_encendido
 jueves:
   name: jueves
   view: no
@@ -17,3 +31,24 @@ jueves:
   entities:
    - automation.jueves_apagado
    - automation.jueves_encendido
+viernes:
+  name: viernes
+  view: no
+  icon: 'mdi:check-circle'
+  entities:
+   - automation.viernes_apagado
+   - automation.viernes_encendido
+sabado:
+  name: sabado
+  view: no
+  icon: 'mdi:check-circle'
+  entities:
+   - automation.sabado_apagado
+   - automation.sabado_encendido
+domingo:
+  name: domingo
+  view: no
+  icon: 'mdi:check-circle'
+  entities:
+   - automation.domingo_apagado
+   - automation.domingo_encendido
