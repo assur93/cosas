@@ -1,3 +1,49 @@
+dia:
+  alias: dia
+  sequence:
+  - service: variable.set_variable
+    data:
+      variable: var_a
+      value_template: '{{ ((states.sensor.precio_sum.state | float) + (states.variable.var_b.state | float )) | round(4) }}'
+  - service: variable.set_variable
+    data:
+      variable: var_b
+      value_template: '{{ ((states.variable.var_a.state | float )) | round(4) }}'
+mes:
+  alias: mes
+  sequence:
+  - service: variable.set_variable
+    data:
+      variable: var_c
+      value_template: '{{ ((states.variable.var_b.state | float) + (states.variable.var_d.state | float )) | round(4) }}'
+  - service: variable.set_variable
+    data:
+      variable: var_d
+      value_template: '{{ ((states.variable.var_c.state | float )) | round(4) }}'
+  - service: variable.set_variable
+    data:
+      variable: var_b
+      value: 0
+ano:
+  alias: ano
+  sequence:
+  - service: variable.set_variable
+    data:
+      variable: var_a
+      value: 0
+  - service: variable.set_variable
+    data:
+      variable: var_b
+      value: 0
+  - service: variable.set_variable
+    data:
+      variable: var_c
+      value: 0
+  - service: variable.set_variable
+    data:
+      variable: var_d
+      value: 0
+
 lock:
   alias: LOCK
   sequence:
